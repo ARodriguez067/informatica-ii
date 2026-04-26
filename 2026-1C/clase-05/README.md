@@ -6,10 +6,10 @@
 
 **Tema:** Escritura y lectura binaria básica
 
-* **ejemplo01.c** — Escribe un array de 10 enteros (0 al 9) en `datos.dat` con una sola llamada a `fwrite`, en modo binario (`"wb"`).
+* **ejemplo01.c** — Escribe un vector de 10 enteros (0 al 9) en `datos.dat` con una sola llamada a `fwrite`, en modo binario (`"wb"`).
   Probar: ejecutar y luego mirar el archivo con `xxd datos.dat` o `hexdump -C datos.dat` para ver los 40 bytes (10 ints × 4 bytes) en little-endian. Notar que cada entero ocupa 4 bytes consecutivos, con el byte menos significativo primero (ej: el `1` aparece como `01 00 00 00`).
 
-* **ejemplo02.c** — Lee `datos.dat` entero por entero con `fread` dentro de un `while`, usando aritmética de punteros (`ptr++`) para avanzar por el array. Al salir del loop chequea `feof` para confirmar fin de archivo.
+* **ejemplo02.c** — Lee `datos.dat` entero por entero con `fread` dentro de un `while`, usando aritmética de punteros (`ptr++`) para avanzar por el vector. Al salir del loop chequea `feof` para confirmar fin de archivo.
   Probar: ejecutar después de `ejemplo01.c`. Debe imprimir `0 - 1 - 2 - ... - 9 -`. Probar también con un archivo más chico de lo esperado para ver que el contador refleja cuántos enteros leyó realmente.
 
 **Tema:** Lectura por bloque y validación
@@ -54,16 +54,6 @@
 * **ejemplo11.c** — Lee `archivo.txt` carácter por carácter con `fgetc` hasta `EOF`, y al salir del loop usa `ferror()` y `feof()` para distinguir si fue fin legítimo o error real de lectura.
   Probar: crear un `archivo.txt` con texto y ejecutar — debe terminar con "Lectura finalizada correctamente (EOF)". Para forzar el caso de error, leer un archivo desde un pendrive y desconectarlo durante la lectura (similar al experimento de los ejemplos 12/13 de la clase 04). Es la versión limpia del patrón ferror/feof.
 
-**Ejercicio integrador:**
-
-* **solucion.c** — Decodifica el header de un archivo PNG real:
-  1. Valida que los primeros 8 bytes sean la firma PNG (`89 50 4E 47 0D 0A 1A 0A`).
-  2. Salta los 8 bytes siguientes (4 del tamaño del chunk + 4 del tipo `"IHDR"`) con `fseek` desde la posición actual.
-  3. Lee ancho y alto como `uint32_t` en **big-endian** (network byte order, definido por el estándar PNG).
-  4. Convierte cada uno a little-endian con la función `invertir_bytes()` y los imprime.
-
-  Probar: usar la `imagen.png` provista o cualquier PNG (un screenshot, un meme). Comparar el resultado con el comando `file imagen.png` de Linux que también reporta las dimensiones. Probar con un archivo que NO sea PNG (renombrar un `.txt` a `.png`) y ver que el programa detecta firma inválida. **Para entender por qué hay que invertir los bytes**, comentar la línea de `invertir_bytes()` y leer directo: los números salen absurdos (cientos de millones) — esa es la prueba viva del slide del huevo (Lilliputians vs Blefuscudians).
-
 **Recursos auxiliares**
 
-* **imagen.png** — Imagen PNG de prueba para `ejemplo10.c` (medir tamaño) y `solucion.c` (decodificar dimensiones).
+* **imagen.png** — Imagen PNG de prueba para `ejemplo10.c` (medir tamaño).
